@@ -1,0 +1,33 @@
+<form class="well">
+  <div class="form-group">
+      <input type="text" [(ngModel)]="title"  
+      name="title" class="form-control" placeholder="enter a new Task... then click Add"
+      style="width:50%"> 
+      <input type="button" (click)="addTask($event)" value="Add" class="btn btn-danger"
+      style="margin-top: -57px;margin-left: 605px;">      
+  </div>  
+</form>
+
+<div *ngIf="!tasks">Loading Tasks...</div>
+
+<div class="task-list">
+  <div *ngFor="let task of tasks" style="margin-top:3px;">
+      
+    
+      <div  [ngClass]="{'red-report':task.isdone}">
+            <div class="col-md-1">
+                <input type="checkbox" [checked]="task.isdone" (click)="updateTask(task)">
+            </div>
+            <div class="col-md-7">
+                {{task.Title}}    
+            </div> 
+            <div class="col-md-4">
+                <input type="button" (click)="deleteTask(task)" value="Delete" class="btn btn-danger">    
+            </div>
+            <br><br>
+    </div>
+
+    
+
+  </div>
+</div>
