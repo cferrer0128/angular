@@ -9,22 +9,23 @@ import 'rxjs/add/operator/map';
 export class TaskService{
 
 
-    private domain:string='https://myionic.azurewebsites.net/'
+    private domain:string='https://u9avc8h706.execute-api.us-east-2.amazonaws.com/dev'//'https://myionic.azurewebsites.net/'
+
     constructor (private http:Http){
         console.log('Task service has been Initialized!!');
     }
 
     getTasks(){
-        return this.http.get(this.domain+'api/tasks')
+        return this.http.get(this.domain)
         .map(res =>res.json())
     }
 
 ///api/task
     addTask(newTask){
         var headers = new Headers();
-        newTask.isdeleted = false;
+        //newTask.isdeleted = false;
         headers.append('Content-Type','application/json');
-        return this.http.post(this.domain+'api/task',JSON.stringify(newTask),{headers:headers})
+        return this.http.post(this.domain+'',JSON.stringify(newTask),{headers:headers})
         .map(res => res.json());
     }
 
@@ -35,17 +36,19 @@ export class TaskService{
         var headers = new Headers();
         headers.append('Content-Type','application/json');
         
-        return this.http.delete(this.domain+'api/task/'+task._id,{headers:headers})
+            /*return this.http.delete(this.domain+''+task._id,{headers:headers})
+            .map(res => res.json());*/
+            
+            return this.http.put(this.domain+'',JSON.stringify(task),{headers:headers})
             .map(res => res.json());
     }
 
     updateTask(task){
-        task.isdeleted = false;
-        console.log('Task before deleting' + JSON.stringify(task));
+        
         var headers = new Headers();
         headers.append('Content-Type','application/json');
           console.log('Task befor upding !!' + JSON.stringify(task));
-          return this.http.put(this.domain+'api/task/'+task._id,JSON.stringify(task),{headers:headers})
+          return this.http.put(this.domain+'',JSON.stringify(task),{headers:headers})
             .map(res => res.json());
     }
 }

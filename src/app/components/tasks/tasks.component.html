@@ -1,8 +1,8 @@
 <form class="well">
   <div class="form-group">
       <input type="text" [(ngModel)]="title"  
-      name="title" class="form-control" placeholder="enter a new Task... then click Add"
-      style="width:50%"> 
+      name="title" class="form-control" placeholder="enter a new Task... then click Add Total Task [{{tasks?tasks.length:''}}]"
+      style="width:100%"> 
       <input type="button" (click)="addTask($event)" value="Add" class="btn btn-danger">      
   </div>  
 </form>

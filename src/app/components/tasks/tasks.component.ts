@@ -8,13 +8,27 @@ import {TaskService} from '../../sevices/task.service';
 })
 export class TasksComponent implements OnInit {
 
-  tasks: any;
+  public tasks: any;
   title: string='';
   onetask:any;
 
   constructor(private taskservice:TaskService) {
 
     this.tasks=[];
+
+    setInterval(()=>{
+
+      this.taskservice.getTasks()
+      .subscribe(mytask =>{
+          this.tasks =[];
+          let data = mytask.data;
+          for(var i=0; i<data.length;i++){
+            if(typeof data[i].isdone != "undefined" && typeof data[i].isdeleted != "undefined" && 
+            !data[i].isdeleted) this.tasks.push(data[i]);
+          }
+      });
+
+    },10000)
 
    }
 
@@ -24,7 +38,8 @@ export class TasksComponent implements OnInit {
   var _task = {
       Title:task.Title,
       _id:task._id,
-      isdone:!task.isdone
+      isdone:!task.isdone,
+      isdeleted:false
   };
   this.taskservice.updateTask(_task)
   .subscribe(data =>{
@@ -38,6 +53,7 @@ export class TasksComponent implements OnInit {
         Title: this.title,
         isdone:false
     }
+    this.title = "";
     //calling the service....
     this.taskservice.addTask(newTask)
         .subscribe(task =>{
@@ -48,17 +64,22 @@ export class TasksComponent implements OnInit {
   }
   //delete task...
   deleteTask(task){
-    task.isdeleted = true;
+   
+    var _task = {
+      Title:task.Title,
+      _id:task._id,
+      isdone:task.isdone,
+      isdeleted:true
+    };
     this.onetask = task;
-        this.taskservice.deleteTask(task)
+        this.taskservice.updateTask(_task)
         .subscribe(data =>{
           //console.log('Delete task... ' + JSON.stringify(data));
           for(var i=0; i<this.tasks.length;i++){
                 if(this.tasks[i]._id == this.onetask._id){
                     
-                    console.log('Delete task... ' + JSON.stringify(this.tasks[i]))
-         
-                         this.tasks.splice(i,1);
+                      console.log('Delete task... ' + JSON.stringify(this.tasks[i]))
+                      this.tasks.splice(i,1);
                 }
                    
           }
@@ -73,15 +94,18 @@ export class TasksComponent implements OnInit {
     this.taskservice.getTasks()
     .subscribe(mytask =>{
 
+      console.log('data from Mongodb ', mytask)
       this.tasks =[];
-      for(var i=0; i<mytask.length;i++){
-            if(typeof mytask[i].isdone != "undefined"){
-              console.log('Task ',mytask[i])
-              this.tasks.push(mytask[i]);
-            }
-              
+      let data = mytask.data;
+      for(var i=0; i<data.length;i++){
+            if(typeof data[i].isdone != "undefined" && 
+              typeof data[i].isdeleted != "undefined" && 
+              !data[i].isdeleted)
+               this.tasks.push(data[i]);
 
       }
+
+      console.log('Tasks ',this.tasks)
 
     })
   }
