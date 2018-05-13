@@ -14,6 +14,7 @@
   },
   "private": true,
   "dependencies": {
+<<<<<<< HEAD
     "@angular/animations": "^5.2.0",
     "@angular/common": "^5.2.0",
     "@angular/compiler": "^5.2.0",
@@ -30,6 +31,23 @@
     "hoek": "^5.0.3",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"
+=======
+    "@angular/animations": "^4.2.4",
+    "@angular/common": "^4.2.4",
+    "@angular/compiler": "^4.2.4",
+    "@angular/core": "^4.2.4",
+    "@angular/forms": "^4.2.4",
+    "@angular/http": "^4.2.4",
+    "@angular/platform-browser": "^4.2.4",
+    "@angular/platform-browser-dynamic": "^4.2.4",
+    "@angular/router": "^4.2.4",
+    "bootstrap": "^4.0.0-alpha.6",
+    "core-js": "^2.4.1",
+    "handlebars": "^4.0.11",
+    "hoek": "^5.0.3",
+    "rxjs": "^5.4.2",
+    "zone.js": "^0.8.14"
+>>>>>>> f976b6c664dcf70d5926807e2e63d06e01c79312
   },
   "devDependencies": {
     "@angular/cli": "1.6.7",
