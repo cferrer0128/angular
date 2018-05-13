@@ -15,9 +15,10 @@ export class TaskService{
         console.log('Task service has been Initialized!!');
     }
 
-    getTasks(){
+    public getTasks(){
         return this.http.get(this.domain)
         .map(res =>res.json())
+        .toPromise();
     }
 
 ///api/task
@@ -27,8 +28,9 @@ export class TaskService{
         headers.append('Content-Type','application/json');
         return this.http.post(this.domain+'',JSON.stringify(newTask),{headers:headers})
         .map(res => res.json());
-    }
+        }
 
+    
     deleteTask(task){
        
         task.isdeleted = true;

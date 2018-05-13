@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {TaskService} from '../../sevices/task.service';
+import {Observable} from 'rxjs/Observable'
+import {Subject} from 'rxjs/Subject'
+import {BehaviorSubject} from "rxjs/Rx";
+
 
 @Component({
   selector: 'app-tasks',
@@ -8,28 +12,49 @@ import {TaskService} from '../../sevices/task.service';
 })
 export class TasksComponent implements OnInit {
 
-  public tasks: any;
+  public tasks=[];
+
+  public config = {
+    title: "Serverless Table",
+    w: 300,
+    h: 300,
+    itemHeight: 31,
+    totalRows: this.tasks.length>0?this.tasks.length:0,
+    items: this.tasks,
+    sort:{'_id':'desc'}
+  }
+
+  
   title: string='';
   onetask:any;
+  public myTimer:any;
+  public isloaded:boolean=false;
+
+  public arrRecords: Promise<any>|null = null;
+
+   onRowClick(row:any){
+    console.log(row);
+    console.log("selected row:"+ row._id +" "+row.Title);
+    //console.log(row);
+  }
 
   constructor(private taskservice:TaskService) {
 
     this.tasks=[];
 
-    setInterval(()=>{
+   //Interval here...
 
-      this.taskservice.getTasks()
-      .subscribe(mytask =>{
-          this.tasks =[];
-          let data = mytask.data;
-          for(var i=0; i<data.length;i++){
-            if(typeof data[i].isdone != "undefined" && typeof data[i].isdeleted != "undefined" && 
-            !data[i].isdeleted) this.tasks.push(data[i]);
-          }
-      });
+      let start = Date.now();
+      /*
+      setInterval(() => {
 
-    },10000)
+        this.myTimer = new Date(Date.now() - start).toTimeString();
 
+      
+          console.log("seconds elapsed = " + Math.floor((Date.now() - start)/1000));
+        // expected output : seconds elapsed = 2
+      }, 1000);*/
+      
    }
 
  //update Task
@@ -57,8 +82,10 @@ export class TasksComponent implements OnInit {
     //calling the service....
     this.taskservice.addTask(newTask)
         .subscribe(task =>{
-            console.log('before saving ' + task)
-            this.tasks.push(task);
+            console.log('saved ', task)
+            this.tasks.push(task.packageSent);
+            this.arrRecords = new Promise<any>((resolve,reject) => { resolve(this.tasks)})
+
         })
 
   }
@@ -90,11 +117,12 @@ export class TasksComponent implements OnInit {
 }
 
   ngOnInit() {
-
     this.taskservice.getTasks()
-    .subscribe(mytask =>{
+    .then(mytask =>{
 
       console.log('data from Mongodb ', mytask)
+      let myTime = Date.now();
+      this.isloaded =  true;
       this.tasks =[];
       let data = mytask.data;
       for(var i=0; i<data.length;i++){
@@ -103,11 +131,17 @@ export class TasksComponent implements OnInit {
               !data[i].isdeleted)
                this.tasks.push(data[i]);
 
+               console.log('FOR LOOP ngOnInit Seconds ', Math.floor((Date.now() - myTime)/1000))
       }
 
-      console.log('Tasks ',this.tasks)
+      this.arrRecords = new Promise<any>((resolve,reject) => { resolve(this.tasks)})
 
-    })
+
+      //this.config.items = this.tasks;
+      console.log('end time FOR LOOP ngOnInit ', Math.floor((Date.now() - myTime)/1000))
+      
+
+    }).catch(err =>{ console.log('Error get task Promise  ')})
   }
 
 }

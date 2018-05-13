@@ -5,6 +5,9 @@ import { AppComponent } from './app.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { TaskService } from './sevices/task.service';
 import { HttpModule } from '@angular/http';
+
+//import { CuppaDataGridModule } from 'cuppa-ng2-grid/cuppa-ng2-dataGrid';
+
 @NgModule({
 
   declarations: [
@@ -13,7 +16,9 @@ import { HttpModule } from '@angular/http';
   ],
   imports: [
     BrowserModule,
-    FormsModule,HttpModule
+    FormsModule,
+    HttpModule
+    
   ],
   providers: [
     TaskService
